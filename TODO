@@ -1,0 +1,15 @@
+FIXME: signUp :  date error message , make it understandable by using error.response.dara
+
+FIXME: signUp : blood must be fixed if your blood is set to ... 'add a bar to call it "select your blood" once he select a blood it go poof or make it unaviavle var'
+
+FIXME: when switching between components we should keep the HISTORY of components 
+
+FIXME: replace security for jwt
+
+TODO: apply trim to every string we recieve // maybe once we call server and send stuff
+
+TODO: in Update or post a new post we use the same template(component) in post we keep it umpty
+but in post we parse in the data that we already have and the user can see what he want to change 
+
+TODO: add focus method on all input (more like an optional arg in the fun) for the first input field
+
