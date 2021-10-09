@@ -5,7 +5,14 @@ import jwtDecode from 'jwt-decode'
 //api url
 const apiUrl = config.apiUrl
 
+//get token 
+const getJWT = () => {
+    return  localStorage.getItem('token')
+}
+
 //sending token everytime we need to as a default header in every CRUD operation
+
+axios.defaults.headers.common['x-auth-token'] = getJWT() 
 
 //universall post function
 const callApi = async (data , url) => {
@@ -13,6 +20,16 @@ const callApi = async (data , url) => {
         const res = await axios.post( apiUrl + url , data)
         return(res)
     } catch (error) {
+        return (error)
+    }
+}
+
+const getApi = async (url) => {
+    try {
+        const res = await axios.get( apiUrl + url)
+        return(res)
+    }
+    catch (error) {
         return (error)
     }
 }
@@ -26,9 +43,12 @@ const getUser = () => {
     return null
 }
 
+
+
 //exports 
 export {
     callApi ,
-    getUser
+    getUser ,
+    getApi
 }
 
