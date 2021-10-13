@@ -15,7 +15,7 @@ function NavLinks({user}) {
       {
         user &&
         <>
-        <NavLink to="/home">Home</NavLink>
+        <NavLink to="/">Home</NavLink>
         <NavLink to="/lol">Bruh page </NavLink> 
         <NavLink to="/create">CreatePost</NavLink> 
         <NavLink to="/comment">comment</NavLink> 

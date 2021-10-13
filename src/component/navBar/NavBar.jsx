@@ -14,20 +14,14 @@ import { CommentPost } from "../post/CommentPost";
 import LogOut from "../user/LogOut";
 
 function NavBar({ user }) {
-  const isLoggedOut = (props, Comp) => {
+  const isLoggedOut = (props, Comp ) => {
     if (user) return <Redirect to="/" />;
     return <Comp {...props} />;
   };
-  const isLogged = (props, Comp) => {
+  const isLogged = (props, Comp ) => {
     if (!user) return <Redirect to="/login" />;
-    return <Comp {...props} />;
+    return <Comp {...props}  />;
   };
-
-  // {props => {
-  //   if(user) return <Redirect to="/"/>
-  //   return <Login {...props} />
-  // }
-
   return (
     <>
       <NavLinks user={user} />
@@ -45,6 +39,7 @@ function NavBar({ user }) {
         />
         <Route path="/logout" render={(props) => isLogged(props, LogOut)} />
         <Route exact path="/" component={Home} />
+        <Route path="/:id" component={Home} />
         <Redirect to="/" />
       </Switch>
     </>

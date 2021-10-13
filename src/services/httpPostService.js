@@ -2,13 +2,19 @@ import { getApi } from "./httpService";
 
 const url = 'post/'
 
-const getPosts = async() => {
-    const res = await getApi(url) 
-    console.log(res)
+//handle getting posts
+const getPosts = async(id='') => {
+    return await getApi(url + id) 
+}
+
+//handle getting a single post
+const getPost = async(id) => {
+    return await getApi(url + id )
 }
 
 getPosts()
 export {
-    getPosts
+    getPosts ,
+    getPost
 }
  
