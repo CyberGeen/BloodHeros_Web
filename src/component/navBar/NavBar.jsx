@@ -10,7 +10,6 @@ import { Home } from "../home/Home";
 import Login from "../user/Login";
 import SignUp from "../user/SignUp";
 import CreatePost from "../post/CreatePost";
-import { CommentPost } from "../post/CommentPost";
 import LogOut from "../user/LogOut";
 
 function NavBar({ user }) {
@@ -32,10 +31,6 @@ function NavBar({ user }) {
         <Route
           path="/create"
           render={(props) => isLogged(props, CreatePost)}
-        />
-        <Route
-          path="/comment"
-          render={(props) => isLogged(props, CommentPost)}
         />
         <Route path="/logout" render={(props) => isLogged(props, LogOut)} />
         <Route exact path="/" component={Home} />
