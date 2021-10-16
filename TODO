@@ -6,6 +6,7 @@ FIXME: when switching between components we should keep the HISTORY of component
 
 FIXME: replace security for jwt
 
+FIXME: when submitting clear the state or redirect
 
 TODO: apply trim to every string we recieve // maybe once we call server and send stuff
 

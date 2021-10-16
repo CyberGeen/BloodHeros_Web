@@ -66,7 +66,7 @@ export class Post extends Component {
   //handle getting a single post
   renderPost = () => {
     if(this.state.singlePostStatus !== "" ) {
-      return this.convertPost(this.state.data , this.renderComment(this.state.data.comments) , true )
+      return this.convertPost(this.state.data , this.renderComment(this.state.data.comments , this.state.data._id )  , true )
     }
     else{
       let tempPostHolder = this.state.data.filter( (post) => {
@@ -76,45 +76,115 @@ export class Post extends Component {
         //   return post
         // }
       } )
-      return this.convertPost(tempPostHolder[0] , this.renderComment(tempPostHolder[0].comments) , true )
+      return this.convertPost(tempPostHolder[0] , this.renderComment(tempPostHolder[0].comments , tempPostHolder[0]._id )  , true )
     }
   }
 
   //----------------comment section----------------
-  renderComment = (data) => {
+  renderComment = (data , postId) => {
+      //avoid rep and over complicated children by simplifying params
+      //TODO: throw this func , became useless
     const handleCommentStateRef = (action='GET' , target=null ) => {
-      return this.handleCommentState(action , data , target)
+      return this.handleCommentState(action , data , target , postId)
     }
     return (
-      <CommentPost data={data} handleCommentState={handleCommentStateRef} />
+      <CommentPost data={data} handleCommentState={handleCommentStateRef} postId={postId} />
     )
   }
 
-  //avoid rep and over complicated children by simplifying params
   
-
-  handleCommentState = (action = 'GET' , org , target=null) => {
+  //FIXME: throw this code away 
+  handleCommentState = (action = 'GET' , org , target=null , postId ) => {
     // comment state role : keep the state tact , handle jsx changes inside comment component
     //redux style
     switch (action) {
       case 'GET':
-        return org
-        break;
+        //TODO:  before that sort by time
+        return this.handleGettingComment(postId)
       case 'POST':
         //no optimistic needs a comment id
-        break;
+        return this.handlePostingComment(target , postId)
       case 'PUT':
         //opttimistic aproch
-        break;
+        return this.handleUpdatingComment()
       case 'DELETE':
         //optimistic aptoch
-        break;
+        return this.handleDeletingComment(postId , target)
       
       default: console.log('code is an art and i suck at it')
         break;
     }
   }
 
+  //miner func insode the switch
+  handleGettingComment = (postID) => {
+    //sort before sending // nvm its sorted
+    if(this.state.singlePostStatus !== "" ) {
+      console.log("2")
+      return this.state.comments
+    }
+    else {
+      return this.state
+    }
+  }
+
+  handlePostingComment = (cmnts , postId) => {
+    //apply a getting a post
+    if (!cmnts) {
+      //error accured   
+      //TODO: handle data being null meaning an error (toastify)
+      return ;
+    }
+    else if(this.state.singlePostStatus !== "" ) {
+     //return no need for extra the data will be updated by itself once tabs are switched
+     return;
+    }
+    else {
+      //single sorce of truth     
+      let data = this.state.data
+      console.log(data)
+      data =  data.map(( post ) => {
+        if(post._id === postId) {
+        post.comments = cmnts
+        }
+        return post
+      })
+      console.log(data)
+      this.setState({   data   })
+
+      console.log(this.state)
+    }
+  }
+
+  handleUpdatingComment = () => {
+
+  }
+
+  handleDeletingComment = (postId , id) => {
+    console.log('comment should be deleted')
+    if(this.state.singlePostStatus !== "" ) {
+     //return no need for extra the data will be updated by itself once tabs are switched
+     return;
+    }
+    let data = this.state.data 
+    data =  data.map(( post ) => {
+      //get the post that we want
+      if(post._id === postId) {
+        //filter the comments
+      post.comments = post.comments.filter( (comment) => {
+        return comment._id!==id
+      } )
+      }
+      return post
+    })
+    console.log(data)
+    this.setState({   data   })
+
+      console.log(this.state)
+
+  }
+
+ 
 
   //end of the class 
 }

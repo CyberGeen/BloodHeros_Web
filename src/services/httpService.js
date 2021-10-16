@@ -34,6 +34,17 @@ const getApi = async (url) => {
     }
 }
 
+const deleteApi = async (url) => {
+    try {
+        const res = await axios.delete( apiUrl + url)
+        return(res)
+    }
+    catch (error) {
+        return (error)
+    }
+}
+
+
 //get user attribut
 const getUser = () => {
     const token = localStorage.getItem('token')
@@ -49,6 +60,7 @@ const getUser = () => {
 export {
     callApi ,
     getUser ,
-    getApi
+    getApi , 
+    deleteApi
 }
 
