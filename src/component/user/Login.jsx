@@ -8,13 +8,6 @@ export class Login extends Form {
         email: Joi.string().required().label('Email') ,
         password: Joi.string().required().min(5).label('Password')
     }
-    /*
-    state = {
-        data:{
-            email:"" ,
-            password:""
-        }
-    } */
 
     submitForm = async () => {
         this.setState({...this.state , errors:{

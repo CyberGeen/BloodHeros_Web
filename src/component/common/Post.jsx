@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { getPosts } from "../../services/httpPostService";
+import { getPosts , deletePost } from "../../services/httpPostService";
 import { CommentPost } from './../post/CommentPost';
 
 export class Post extends Component {
@@ -44,6 +44,7 @@ export class Post extends Component {
     }
     return (
       <>
+        {<button onClick={(e) => {this.handleDeletePost(e , post._id)}} >DELETE</button>}
         {this.postJSX(post)}
         {comment}
       </>
@@ -62,6 +63,31 @@ export class Post extends Component {
         </div>
     )
   }
+
+  //handle deleting a post
+  handleDeletePost = async (e , id) => {
+    e.preventDefault()
+    const prevState = this.state
+    //if a single post we dont need to optimise the state
+    if(this.state.singlePostStatus !== ''){
+      await deletePost(id)
+      this.props.history.push('/')
+      return
+    }
+    //optimistic aproach
+    //filtering the data and deleting the post from the main state
+    let data = prevState.data.filter( post =>  post._id!==id  )
+    this.props.history.push('/')
+    this.setState({data})
+    const res = await deletePost(id)
+    //if anything wrong we return the main state
+    if(!res.data) {
+      data = prevState
+      this.setState({data})
+      //FIXME: toastify + error : server is down or you have no authority to delete this
+    }
+  }
+
 
   //handle getting a single post
   renderPost = () => {

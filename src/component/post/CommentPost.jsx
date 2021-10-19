@@ -49,7 +49,7 @@ export class CommentPost extends Form {
         //update the comp inner state
         let comments = this.state.comments 
         comments = comments.filter((comment)=> {return comment._id!==id})
-        //this.setState({comments})
+        this.setState({comments})
 
         this.props.handleCommentState('DELETE' , id )
         //post id + cmnt id

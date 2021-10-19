@@ -24,7 +24,7 @@ function NavBar({ user }) {
   return (
     <>
       <NavLinks user={user} />
-      <Switch>
+      <Switch >
         <Route path="/lol" component={Test} />
         <Route path="/login" render={(props) => isLoggedOut(props, Login)} />
         <Route path="/signup" render={(props) => isLoggedOut(props, SignUp)} />
@@ -33,7 +33,9 @@ function NavBar({ user }) {
           render={(props) => isLogged(props, CreatePost)}
         />
         <Route path="/logout" render={(props) => isLogged(props, LogOut)} />
-        <Route exact path="/" component={Home} />
+        <Route exact path="/" 
+          render={ (props) => {return <Home {...props} />} }
+        />
         <Route path="/:id" component={Home} />
         <Redirect to="/" />
       </Switch>

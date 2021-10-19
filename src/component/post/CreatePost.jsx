@@ -3,6 +3,7 @@ import  Joi  from 'joi-browser';
 import bloodTypesJson from '../json/bloodType.json'
 import citiesJson from '../json/cities.json'
 import tagsJson from '../json/tags.json'
+import { postPost } from '../../services/httpPostService';
 
 
 export class CreatePost extends Form {
@@ -33,6 +34,17 @@ export class CreatePost extends Form {
         } ) ,
         image: Joi.optional().allow('')
     }
+
+    submitForm = async() => {
+        const res = await postPost(this.state.data)
+        if(res.data){
+            this.props.history.push('/')
+        }
+        else{
+            //FIXME: toastify the error.response
+        }
+    }
+
     render() {
         return (
             <div>

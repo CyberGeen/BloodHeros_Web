@@ -15,7 +15,7 @@ export class Home extends Component {
     if(this.props.match.path === '/:id'){
       return (
         <div>
-          <GetAllPosts id={this.props.match.url.substring(1)} />
+          <GetAllPosts id={this.props.match.url.substring(1)}  {...this.props} />
         </div>
         );
     }

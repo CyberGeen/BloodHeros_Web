@@ -1,4 +1,4 @@
 {
-    "urgent":"EMERGENCY" ,
-    "orthers":"ANYTHING ELSE"
+    "urgent":"urgent" ,
+    "other":"other"
 }
