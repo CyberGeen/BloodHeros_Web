@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { getPosts , deletePost } from "../../services/httpPostService";
 import { CommentPost } from './../post/CommentPost';
-
+import isOwner from "./isOwner";
 export class Post extends Component {
     //handle getting data Logic
-    
   getAllPosts = async (id='') => {
     
       getPosts(id).then(({ data }) => {
@@ -44,14 +43,14 @@ export class Post extends Component {
     }
     return (
       <>
-        {<button onClick={(e) => {this.handleDeletePost(e , post._id)}} >DELETE</button>}
+        {isOwner(post.posted_by) &&  <button onClick={(e) => {this.handleDeletePost(e , post._id)} } >DELETE</button>}
         {this.postJSX(post)}
         {comment}
       </>
     )
       
   }
-
+  
   //quality of life changes
   postJSX = (post) => {
     return (

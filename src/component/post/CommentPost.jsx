@@ -1,6 +1,8 @@
 import { Form } from '../common/Form';
 import  Joi  from 'joi-browser';
 import {postComment , deleteComment} from '../../services/httpPostService'
+import isOwner from '../common/isOwner';
+
 export class CommentPost extends Form {
     state = {
         data:{
@@ -34,7 +36,7 @@ export class CommentPost extends Form {
             return (
                 <div key={com._id}>
                     <p> {com.content} </p>
-                    <button onClick={(e) => this.handleDelete(e , com._id) } >DELETE</button>
+                    {isOwner(com.postedBy) &&  <button onClick={(e) => this.handleDelete(e , com._id) } >DELETE</button>}
                 </div>
             )
         } )

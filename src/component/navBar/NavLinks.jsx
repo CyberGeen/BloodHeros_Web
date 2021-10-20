@@ -8,17 +8,17 @@ function NavLinks({user}) {
       {
         !user && 
         <>
-        <NavLink to="login">Login </NavLink>
-        <NavLink to="/signup">SignUp </NavLink>
+        <NavLink to="login"> Login </NavLink>
+        <NavLink to="/signup"> SignUp </NavLink>
         </>
       }
       {
         user &&
         <>
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/lol">Bruh page </NavLink> 
-        <NavLink to="/create">CreatePost</NavLink> 
-        <NavLink to="/logout">Log out</NavLink>
+        <NavLink to="/"> Home</NavLink>
+        <NavLink to="/lol"> Bruh page </NavLink> 
+        <NavLink to="/create"> CreatePost </NavLink> 
+        <NavLink to="/logout"> Logout </NavLink>
       </>
       }
     </nav>

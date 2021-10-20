@@ -8,6 +8,8 @@ FIXME: replace security for jwt
 
 FIXME: when submitting clear the state or redirect
 
+FIXME: change api where mongoose send only something to verify the update was seccessful
+
 TODO: apply trim to every string we recieve // maybe once we call server and send stuff
 
 TODO: in Update or post a new post we use the same template(component) in post we keep it umpty
