@@ -27,12 +27,25 @@ const deleteComment = async (postID , commentId) => {
     return await deleteApi(url + postID + '/comment/' + commentId )
 }
 
+//handle UpDown votes
+const vote = async (postId , key ) => {
+    switch (key) {
+        case 'U':
+            return await getApi(url + postId + '?vote=1')
+        case 'D':
+            return await getApi(url + postId + '?vote=-1')                
+        default:
+            break;
+    }
+}
+
 getPosts()
 export {
     getPosts ,
     deletePost ,
     postPost ,
     postComment ,
-    deleteComment 
+    deleteComment ,
+    vote
 }
  

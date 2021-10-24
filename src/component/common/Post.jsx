@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { getPosts , deletePost } from "../../services/httpPostService";
+import UpDownVote from "../post/UpDownVote";
 import { CommentPost } from './../post/CommentPost';
 import isOwner from "./isOwner";
+import { getUser } from "../../services/httpService";
+import { vote as voteAPI } from "../../services/httpPostService";
 export class Post extends Component {
     //handle getting data Logic
   getAllPosts = async (id='') => {
@@ -35,6 +38,7 @@ export class Post extends Component {
     if(!singlePost) {
       return (
         <div key={post._id}>
+        {this.renderVotes(post)}
         <Link  to={location => ({ ...location, pathname: post._id })}>
           {this.postJSX(post)}          
         </Link>
@@ -43,6 +47,7 @@ export class Post extends Component {
     }
     return (
       <>
+        {this.renderVotes(post)}
         {isOwner(post.posted_by) &&  <button onClick={(e) => {this.handleDeletePost(e , post._id)} } >DELETE</button>}
         {this.postJSX(post)}
         {comment}
@@ -51,6 +56,141 @@ export class Post extends Component {
       
   }
   
+  //-------------------handle votes--------------------------
+  //fixing state not rendering votes correctly by moving the source of truth to the main component
+  //any data data correption during the unmount phase wont corrept the main state
+
+  renderVotes = (post) => {
+    const vote = (action) => {
+      return this.beforeHandleVote(action , post)
+    }
+    return (<UpDownVote  state={post} vote={vote} />)
+  }
+
+  beforeHandleVote = async(key , posts) => {
+    let oldPost = Object.assign({}, posts)
+    let post = await this.handleVote(key , posts)
+    if(this.state.singlePostStatus !== '' ){
+          this.setState({...this.state , data:post})
+        }else{
+          let data = this.state.data.map( (temp) => {
+            if (temp._id === post._id) {
+              temp = post
+            }
+            return temp
+          }
+           )
+           this.setState({...this.state.data,data:data})
+        }
+        //caling the api
+        try{
+          const res = await voteAPI(post._id , key)
+          console.log(res)
+          //if failer
+          if(res.response){
+            if(this.state.singlePostStatus !== '' ){
+              this.setState({...this.state.data , data:oldPost})
+            }
+          }
+        }catch(err){
+          console.log(err)
+        }
+  }
+
+  handleVote = async(key , posts) => {
+    let post = posts
+    switch (key) {
+        case 'U': 
+                post = this.removeVote('D' ,post )
+                const res = this.checkVote('U' ,post )
+                if(res === true){
+                    post = this.removeVote('U',post)
+                }else{                    
+                    post = this.pushVote('U' ,post )
+                }
+                //update the main state
+                //calling the api
+                break;
+            case 'D': 
+                post = this.removeVote('U' ,post )
+                const ress = this.checkVote('D' ,post )
+                if(ress === true){
+                    post = this.removeVote('D' ,post )
+                }else{                    
+                    post = this.pushVote('D' ,post )
+                }
+                break;
+            default:
+                break;
+        }
+        //optimistic aproach , update the state than call the api , change state if failer
+        //for more smooth user interaction
+        return post
+  }
+
+  checkVote = (key , post ) => {
+    let {_id} = getUser()
+    let votes 
+    switch (key) {
+        case 'U':
+            votes = post.up_votes
+            break;
+        case 'D':
+            votes = post.down_votes                
+            break;
+        default:
+            break;
+    }
+    if (votes.length === 0 ) {
+       return false
+    }
+    const id = votes.filter( (vote) => {
+        if(vote._id === _id){
+            return vote
+        }
+        return null
+    } )
+    
+    if(id.length===0){
+        return false
+    }
+    return true
+}
+
+pushVote = (key , post ) => {
+  const {_id} = getUser()
+
+  switch (key) {
+      case 'U':
+           post.up_votes.push({_id})
+          break;
+      case 'D':
+           post.down_votes.push({_id})
+          break;
+      default:
+          break;
+  }
+  return post
+}
+
+removeVote = (key , post) => {
+  const {_id} = getUser()
+  switch (key) {
+      case 'U':
+          post.up_votes =  post.up_votes.filter((vote) => vote._id !== _id )
+          break;
+      case 'D':
+          post.down_votes = post.down_votes.filter((vote) => vote._id !== _id )
+          break;
+  
+      default:
+          break;
+  }
+  return post 
+}
+
+
+  //----------------------------------------------------------
   //quality of life changes
   postJSX = (post) => {
     return (
@@ -145,7 +285,6 @@ export class Post extends Component {
   handleGettingComment = (postID) => {
     //sort before sending // nvm its sorted
     if(this.state.singlePostStatus !== "" ) {
-      console.log("2")
       return this.state.comments
     }
     else {
@@ -167,17 +306,13 @@ export class Post extends Component {
     else {
       //single sorce of truth     
       let data = this.state.data
-      console.log(data)
       data =  data.map(( post ) => {
         if(post._id === postId) {
         post.comments = cmnts
         }
         return post
       })
-      console.log(data)
       this.setState({   data   })
-
-      console.log(this.state)
     }
   }
 
