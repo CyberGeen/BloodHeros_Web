@@ -4,9 +4,6 @@ import { getUser } from "../../services/httpService";
 
 const isOwner = (id) => {
     const {_id} = getUser()
-    if(id !== _id) {
-      return false
-    }
-    return true
+    return id === _id
   }
   export default isOwner

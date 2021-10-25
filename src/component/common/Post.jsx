@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { getPosts , deletePost } from "../../services/httpPostService";
+import { getPosts , deletePost , vote as voteAPI , reportPost  } from "../../services/httpPostService";
 import UpDownVote from "../post/UpDownVote";
 import { CommentPost } from './../post/CommentPost';
 import isOwner from "./isOwner";
 import { getUser } from "../../services/httpService";
-import { vote as voteAPI } from "../../services/httpPostService";
+import { debounce } from 'lodash';
+
 export class Post extends Component {
     //handle getting data Logic
   getAllPosts = async (id='') => {
@@ -32,7 +33,7 @@ export class Post extends Component {
     }
     
   }
-
+//-----------------------------------JSX handeling ----------------------------
   //handle obj to JSX 
   convertPost = (post , comment='' , singlePost=false) => {
     if(!singlePost) {
@@ -49,6 +50,7 @@ export class Post extends Component {
       <>
         {this.renderVotes(post)}
         {isOwner(post.posted_by) &&  <button onClick={(e) => {this.handleDeletePost(e , post._id)} } >DELETE</button>}
+        {!isOwner(post.posted_by) &&  <button onClick={debounce( () => this.handleReport(post._id) , 300) }  >REPORT</button>}
         {this.postJSX(post)}
         {comment}
       </>
@@ -56,6 +58,16 @@ export class Post extends Component {
       
   }
   
+  //handle report 
+  handleReport = async (id) => {
+    try {
+      const res = await reportPost(id)
+      console.log(res)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   //-------------------handle votes--------------------------
   //fixing state not rendering votes correctly by moving the source of truth to the main component
   //any data data correption during the unmount phase wont corrept the main state
@@ -199,6 +211,7 @@ removeVote = (key , post) => {
             <div> {post.description} </div>
             <div> {post.blood_type} </div>
             <div> {post.city} </div>
+            <div> {post.until_donation} </div>
         </div>
     )
   }

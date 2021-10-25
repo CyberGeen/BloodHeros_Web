@@ -39,6 +39,11 @@ const vote = async (postId , key ) => {
     }
 }
 
+//handle report
+const reportPost = async(postId) => {
+    return await getApi(url + postId + '?report=1')
+}
+
 getPosts()
 export {
     getPosts ,
@@ -46,6 +51,7 @@ export {
     postPost ,
     postComment ,
     deleteComment ,
-    vote
+    vote ,
+    reportPost
 }
  

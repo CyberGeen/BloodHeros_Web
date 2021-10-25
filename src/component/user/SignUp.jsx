@@ -95,7 +95,6 @@ export class SignUp extends Form {
 
                 {this.renderInput("last_donation" , "Last Donation Date" , "date")}
 
-                {console.log(this.currentDate)}
 
                 {this.formButton("SignUp")}
                 </form>
