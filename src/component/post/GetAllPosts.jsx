@@ -10,12 +10,7 @@ export class GetAllPosts extends Post {
           if the firt req is the home page we get the data from the array of the state 
           nothing of these causes a re render or a refrech neither any uncessary api call
         */
-        if(!this.props.id){
           this.getAllPosts(this.props.id  )
-        }
-        else {
-          this.getAllPosts(this.props.id  )
-        }
       }
     render() {
         if (!this.state) {

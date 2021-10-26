@@ -44,6 +44,15 @@ const deleteApi = async (url) => {
     }
 }
 
+//put api
+const putApi = async (url , data = null) => {
+    try {
+        const res = await axios.put( apiUrl + url , data)
+        return(res)
+    } catch (error) {
+        return (error)
+    }
+}
 
 //get user attribut
 const getUser = () => {
@@ -55,12 +64,12 @@ const getUser = () => {
 }
 
 
-
 //exports 
 export {
     callApi ,
     getUser ,
     getApi , 
-    deleteApi
+    deleteApi ,
+    putApi
 }
 

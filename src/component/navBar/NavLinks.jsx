@@ -2,6 +2,7 @@
 import React from "react";
 //higher functional imports
 import { NavLink } from "react-router-dom";
+import { isAdmin } from "../common/isAdmin";
 function NavLinks({user}) {
   return (
     <nav>
@@ -20,6 +21,10 @@ function NavLinks({user}) {
         <NavLink to="/create"> CreatePost </NavLink> 
         <NavLink to="/logout"> Logout </NavLink>
       </>
+      }
+      {
+        isAdmin() && 
+        <NavLink to="/admin" > Admin Panel </NavLink>
       }
     </nav>
   );

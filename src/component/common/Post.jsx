@@ -34,11 +34,12 @@ export class Post extends Component {
     
   }
 //-----------------------------------JSX handeling ----------------------------
-  //handle obj to JSX 
+  //handle obj to JSX  /* declineReport is special for admin panel since its inherits */ 
   convertPost = (post , comment='' , singlePost=false) => {
     if(!singlePost) {
       return (
         <div key={post._id}>
+        {this.declineReport &&  this.declineReport(post._id)}
         {this.renderVotes(post)}
         <Link  to={location => ({ ...location, pathname: post._id })}>
           {this.postJSX(post)}          
@@ -61,8 +62,7 @@ export class Post extends Component {
   //handle report 
   handleReport = async (id) => {
     try {
-      const res = await reportPost(id)
-      console.log(res)
+       await reportPost(id)
     } catch (err) {
       console.log(err)
     }
