@@ -47,7 +47,7 @@ export class CommentPost extends Form {
         //taking the event and the id of the comment to be able to handle it
         e.preventDefault()
         //optimistic aproach
-        const oldData = this.state.comments    
+        const oldData = {...this.state.comments}    
         //update the comp inner state
         let comments = this.state.comments 
         comments = comments.filter((comment)=> {return comment._id!==id})

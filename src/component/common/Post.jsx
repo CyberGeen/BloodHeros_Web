@@ -6,6 +6,7 @@ import { CommentPost } from './../post/CommentPost';
 import isOwner from "./isOwner";
 import { getUser } from "../../services/httpService";
 import { debounce } from 'lodash';
+import EditPost from "../post/EditPost";
 
 export class Post extends Component {
     //handle getting data Logic
@@ -47,9 +48,15 @@ export class Post extends Component {
         </div>
       )
     }
+    if(this.state.editPost){
+      return(
+        <EditPost data={post} /> 
+      )
+    }
     return (
       <>
         {this.renderVotes(post)}
+        {isOwner(post.posted_by) && <button onClick={debounce( () => this.handleEdit() , 300) }  >EDIT</button> }
         {isOwner(post.posted_by) &&  <button onClick={(e) => {this.handleDeletePost(e , post._id)} } >DELETE</button>}
         {!isOwner(post.posted_by) &&  <button onClick={debounce( () => this.handleReport(post._id) , 300) }  >REPORT</button>}
         {this.postJSX(post)}
@@ -59,6 +66,16 @@ export class Post extends Component {
       
   }
   
+  //handle edit
+  handleEdit = () => {
+    
+      this.setState({
+        ...this.state , editPost : true
+      })  
+    
+    
+  }
+
   //handle report 
   handleReport = async (id) => {
     try {

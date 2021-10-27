@@ -1,4 +1,4 @@
-import { getApi , callApi , deleteApi  } from "./httpService";
+import { getApi , callApi , deleteApi, putApi  } from "./httpService";
 
 const url = 'post/'
 
@@ -15,6 +15,11 @@ const deletePost = async(id) => {
 //handle posting a post
 const postPost = async(data) => {
     return await callApi(data , url + 'create')
+}
+
+//handle editing a post
+const editPost = async(data , id) => {
+    return await putApi(url + id , data)
 }
 
 //handle posting a comment
@@ -49,6 +54,7 @@ export {
     getPosts ,
     deletePost ,
     postPost ,
+    editPost ,
     postComment ,
     deleteComment ,
     vote ,
