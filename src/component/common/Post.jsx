@@ -7,6 +7,7 @@ import isOwner from "./isOwner";
 import { getUser } from "../../services/httpService";
 import { debounce } from 'lodash';
 import EditPost from "../post/EditPost";
+import SearchSortPost from "../post/SearchSortPost";
 
 export class Post extends Component {
     //handle getting data Logic
@@ -26,14 +27,119 @@ export class Post extends Component {
   //handle rendering and maping the posts 
   renderAllPosts = () => {
     if (this.state.singlePostStatus === '' ) {
-      return this.state.data.map((post) => (
-        this.convertPost(post)
-      ))
+      //TODO: push in here search changes
+      return (
+        <>
+          {this.renderSearchComp()}
+          {this.renderFilteredPosts()}
+        </>
+      )
     } else {
       this.getAllPosts()
     }
     
   }
+
+//---------------------Search handler----------------
+  renderSearchComp = () => {
+    //render search comp
+    return (
+      <SearchSortPost getSearch={this.handleSearchState}  />
+    )
+  }
+
+  handleSearchState = (val) => {
+    this.setState({
+      ...this.state ,
+      search:val
+    })
+    //get the state from the comp
+  }
+
+  //search logic 
+  renderFilteredPosts = () => {
+    //this needs some shit
+    let data = this.state.data
+    
+    if(this.state.search && this.state.search.index !== ''){
+      const index = this.state.search.index
+      data = data.filter((post)=>post.title.toLowerCase().includes(index.toLowerCase()) )
+    }
+    if (this.state.search &&  this.state.search.filter !== '') {
+      if(this.state.search.filter.blood_type  !== ''){
+        data = data.filter( (post) => post.blood_type === this.state.search.filter.blood_type )
+      }
+      if(this.state.search.filter.city  !== ''){
+        data = data.filter( (post) => post.city === parseInt(this.state.search.filter.city) )
+      }
+      if(this.state.search.filter.tags  !== ''){
+        data = data.filter( (post) => post.tags === this.state.search.filter.tags )
+      }
+
+    }
+    if(this.state.search &&  this.state.search.sort !== ''){
+      data = this.flexDevidingMerg(data)
+    }
+    if(data.length !== 0) {
+      return(
+        <> 
+          {data.map((post) => (
+            this.convertPost(post)
+            ))}
+        </>
+      )
+    }
+    return(
+      <>
+        nothing for now ...
+      </>
+    )
+    
+  }
+
+  //--------------merg sort logic 
+  //devifing part
+  flexDevidingMerg = (arr) => { 
+    if (arr.length <= 1){
+      return arr;
+    } 
+    const middle = Math.floor(arr.length/2)
+    const left = arr.slice(0 , middle)
+    const right = arr.slice(middle)
+  return this.MergeSort(  this.flexDevidingMerg(left) , this.flexDevidingMerg(right)  )
+
+}
+//sorting part
+ MergeSort = (left , right) => {
+   const arr=[] ;
+   const key = this.state.search.sort 
+   switch (key) {
+     case 'NEW':
+       //compare the date of publishing
+      while(left.length && right.length){
+        if(left[0].data < right[0].date ){
+           arr.push(left.shift())
+        }else{
+           arr.push(right.shift())
+        }
+      }
+       break;    
+     default:
+      while(left.length && right.length){
+        if(left[0].ud_rate > right[0].ud_rate ){
+           arr.push(left.shift())
+        }else{
+           arr.push(right.shift())
+        }
+      }
+       break;
+   }
+  //quite once one is umpty => there is one var left concat it with the rest
+  return arr.concat(left.concat(right))
+} 
+
+
+
 //-----------------------------------JSX handeling ----------------------------
   //handle obj to JSX  /* declineReport is special for admin panel since its inherits */ 
   convertPost = (post , comment='' , singlePost=false) => {
@@ -68,12 +174,9 @@ export class Post extends Component {
   
   //handle edit
   handleEdit = () => {
-    
       this.setState({
         ...this.state , editPost : true
       })  
-    
-    
   }
 
   //handle report 
@@ -114,7 +217,6 @@ export class Post extends Component {
         //caling the api
         try{
           const res = await voteAPI(post._id , key)
-          console.log(res)
           //if failer
           if(res.response){
             if(this.state.singlePostStatus !== '' ){
@@ -154,6 +256,7 @@ export class Post extends Component {
         }
         //optimistic aproach , update the state than call the api , change state if failer
         //for more smooth user interaction
+        post.ud_rate = post.up_votes.length - post.down_votes.length
         return post
   }
 
