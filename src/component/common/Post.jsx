@@ -83,6 +83,7 @@ export class Post extends Component {
     if(data.length !== 0) {
       return(
         <> 
+          {this.adminStuff && this.adminStuff()}
           {data.map((post) => (
             this.convertPost(post)
             ))}

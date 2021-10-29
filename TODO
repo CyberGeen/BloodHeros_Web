@@ -2,18 +2,16 @@ FIXME: signUp :  date error message , make it understandable by using error.resp
 
 FIXME: signUp : blood must be fixed if your blood is set to ... 'add a bar to call it "select your blood" once he select a blood it go poof or make it unaviavle var'
 
-FIXME: when switching between components we should keep the HISTORY of components 
-
 FIXME: replace security for jwt
 
 FIXME: when submitting clear the state or redirect
 
 FIXME: change api where mongoose send only something to verify the update was seccessful
 
-TODO: apply trim to every string we recieve // maybe once we call server and send stuff
+FIXME: handle errors (toastify) in admin panel
 
-TODO: in Update or post a new post we use the same template(component) in post we keep it umpty
-but in post we parse in the data that we already have and the user can see what he want to change 
+TODO: apply trim to every string we recieve // maybe once we call server and send stuff
+ 
 
 TODO: add focus method on all input (more like an optional arg in the fun) for the first input field
 
