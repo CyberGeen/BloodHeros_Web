@@ -11,6 +11,7 @@ import Login from "../user/Login";
 import SignUp from "../user/SignUp";
 import CreatePost from "../post/CreatePost";
 import LogOut from "../user/LogOut";
+import Me from '../user/Me'
 import { AdminPanel } from './../admin/AdminPanel';
 
 function NavBar({ user }) {
@@ -29,6 +30,7 @@ function NavBar({ user }) {
         <Route path="/lol" component={Test} />
         <Route path="/login" render={(props) => isLoggedOut(props, Login)} />
         <Route path="/signup" render={(props) => isLoggedOut(props, SignUp)} />
+        <Route path="/me" render={(props) => isLogged(props, Me)} />
         <Route
           path="/create"
           render={(props) => isLogged(props, CreatePost)}

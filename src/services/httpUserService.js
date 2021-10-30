@@ -1,11 +1,13 @@
-import {callApi} from './httpService'
+import {callApi , getApi} from './httpService'
+
+const url = 'user/'
 
 const login = async (data) => {
-    return setToken(await callApi(data , 'user/login' )) 
+    return setToken(await callApi(data , url + 'login' )) 
 }
 
 const signUp = async (data) => {
-    return setToken(await callApi(data , 'user/signup' ))
+    return setToken(await callApi(data , url + 'signup' ))
 }
 
 const setToken = async (res) => {
@@ -21,12 +23,17 @@ const setToken = async (res) => {
     else {
         return res
     }
- 
     //this.props.history.push('/')
+}
+
+//get user
+const getUserPage = async() => {
+    return await getApi(url + 'me')
 }
 
 export {
     login ,
-    signUp
+    signUp ,
+    getUserPage
 }
 
