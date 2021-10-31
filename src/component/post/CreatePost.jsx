@@ -14,11 +14,11 @@ export class CreatePost extends Form {
         data:{
             title:"" ,
             description:"" , 
-            blood_type:"" ,
+            blood_type:"O+" ,
             until_donation:"",
             tags:"" ,
             image:"" ,
-            city:0
+            city:1
         }
         ,
         errors:{}
@@ -27,7 +27,14 @@ export class CreatePost extends Form {
         title: Joi.string().required() ,
         description: Joi.string().required() ,
         blood_type: Joi.string().required() ,
-        until_donation: Joi.date().allow("").min(this.currentDate) ,
+        until_donation: Joi.date().allow("").min(this.currentDate).error( (errors) => {
+            return errors.map(error => {
+                if(error.type === "date.min"){
+                    return {message:"add a valid date"}
+                }
+                return null
+            })
+        } ) ,
         tags: Joi.optional().allow('') ,
         city: Joi.number().min(1).error( (errors) => {
             return errors.map(error => {

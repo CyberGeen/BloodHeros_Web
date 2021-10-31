@@ -19,7 +19,14 @@ export class SignUp extends Form {
         gender: Joi.string().required() ,
         city: Joi.number().min(1) ,
         blood_type: Joi.string().required() ,
-        last_donation: Joi.date().allow("").max(this.currentDate) ,
+        last_donation: Joi.date().allow("").max(this.currentDate).error( (errors) => {
+            return errors.map(error => {
+                if(error.type === "date.max"){
+                    return {message:"add a valid date"}
+                }
+                return null
+            })
+        } ) ,
         emergency_info: Joi.object().keys({
             emergencyCall: Joi.number().optional().allow('') ,
             emergencyInfo: Joi.string().optional().allow('')
@@ -35,8 +42,8 @@ export class SignUp extends Form {
                 email: "" ,
                 password: "" ,
                 gender: "" ,
-                city: 0 ,
-                blood_type: "" ,
+                city: 1 ,
+                blood_type: "O+" ,
                 last_donation: "" ,
                 emergency_info: {
                     emergencyCall: "" , 
